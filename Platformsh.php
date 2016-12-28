@@ -6,10 +6,16 @@ class Platformsh
 
     const PREFIX_SECURE = 'https://';
     const PREFIX_UNSECURE = 'http://';
+    
+    protected $webRoot = 'web';
 
-    protected $debugMode = false;
+    protected $debugMode = true;
 
-    protected $platformReadWriteDirs = ['var', 'app/etc', 'pub'];
+    protected $platformReadWriteDirs = [
+      "var", 
+      "app/etc", 
+      "pub"
+    ];
 
     protected $urls = ['unsecure' => [], 'secure' => []];
 
@@ -85,10 +91,10 @@ class Platformsh
         $this->log("Copying read/write directories to temp directory.");
 
         foreach ($this->platformReadWriteDirs as $dir) {
-            $this->execute(sprintf('mkdir -p ../init/%s', $dir));
-            $this->execute(sprintf('/bin/bash -c "shopt -s dotglob; cp -R %s/* ../init/%s/"', $dir, $dir));
-            $this->execute(sprintf('rm -rf %s', $dir));
-            $this->execute(sprintf('mkdir %s', $dir));
+            $this->execute(sprintf('mkdir -p init/%s', $dir));
+            $this->execute(sprintf('/bin/bash -c "shopt -s dotglob; cp -R %s/%s/* init/%s/"', $this->webRoot, $dir, $dir));
+            $this->execute(sprintf('rm -rf %s/%s', $this->webRoot, $dir));
+            $this->execute(sprintf('mkdir %s/%s', $this->webRoot, $dir));
         }
     }
 
@@ -104,11 +110,11 @@ class Platformsh
         $this->log("Copying read/write directories back.");
 
         foreach ($this->platformReadWriteDirs as $dir) {
-            $this->execute(sprintf('/bin/bash -c "shopt -s dotglob; cp -R ../init/%s/* %s/ || true"', $dir, $dir));
+            $this->execute(sprintf('/bin/bash -c "shopt -s dotglob; cp -R init/%s/* %s/%s/ || true"', $dir, $this->webRoot, $dir));
             $this->log(sprintf('Copied directory: %s', $dir));
         }
 
-        if (!file_exists('app/etc/env.php')) {
+        if (!file_exists("{$this->webRoot}/app/etc/env.php")) {
             $this->installMagento();
         } else {
             $this->updateMagento();
@@ -189,14 +195,14 @@ class Platformsh
         $urlSecure = $this->urls['secure'][''];
 
         $command =
-            "cd bin/; /usr/bin/php ./magento setup:install \
+            "cd {$this->webRoot}/bin/; php ./magento setup:install \
             --session-save=db \
             --cleanup-database \
             --currency=$this->defaultCurrency \
             --base-url=$urlUnsecure \
             --base-url-secure=$urlSecure \
             --language=en_US \
-            --timezone=America/Los_Angeles \
+            --timezone=America/New_York \
             --db-host=$this->dbHost \
             --db-name=$this->dbName \
             --db-user=$this->dbUser \
@@ -313,7 +319,7 @@ class Platformsh
         $this->log("Running setup upgrade.");
 
         $this->execute(
-            "cd bin/; /usr/bin/php ./magento setup:upgrade"
+            "cd {$this->webRoot}/bin/; php ./magento setup:upgrade"
         );
     }
 
@@ -326,12 +332,12 @@ class Platformsh
 
         $this->log("Clearing generated code.");
 
-        $this->execute('rm -rf var/generation/*');
+        $this->execute("rm -rf {$this->webRoot}/var/generation/*");
 
         $this->log("Clearing application cache.");
 
         $this->execute(
-            "cd bin/; /usr/bin/php ./magento cache:flush"
+            "cd {$this->webRoot}/bin/; php ./magento cache:flush"
         );
     }
 
@@ -343,7 +349,7 @@ class Platformsh
         $this->log("Generating static content.");
 
         $this->execute(
-            "cd bin/; /usr/bin/php ./magento setup:static-content:deploy"
+            "cd {$this->webRoot}/bin/; php ./magento setup:static-content:deploy"
         );
     }
 
@@ -354,7 +360,7 @@ class Platformsh
     {
         $this->log("Updating env.php database configuration.");
 
-        $configFileName = "app/etc/env.php";
+        $configFileName = "{$this->webRoot}/app/etc/env.php";
 
         $config = include $configFileName;
 
