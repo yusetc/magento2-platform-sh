@@ -26,15 +26,36 @@ relationships:
     solr: "solr:solr"
     redis: "redis:redis"
 
-# The configuration of app when it is exposed to the web.
 web:
-    # The public directory of the app, relative to its root.
     locations:
-      "/":
-        root: "web"
-    # The front-controller script to send non-static requests to.
-        passthru: "/index.php"
-        allow: true
+        "/":
+            # The public directory of the app, relative to its root.
+            root: "web/pub"
+            # The front-controller script to send non-static requests to.
+            passthru: "/index.php"
+            index:
+                - index.php
+            expires: -1
+            scripts: true
+            allow: false
+            rules:
+                \.(css|js|map|hbs|gif|jpe?g|png|tiff|wbmp|ico|jng|bmp|svgz|midi?|mp?ga|mp2|mp3|m4a|ra|weba|3gpp?|mp4|mpe?g|mpe|ogv|mov|webm|flv|mng|asx|asf|wmv|avi|ogx|swf|jar|ttf|eot|woff|otf|html?)$:
+                    allow: true
+                /robots\.txt$:
+                    allow: true
+        "/media":
+            root: "web/pub/media"
+            allow: true
+            scripts: false
+            passthru: "/index.php"
+        "/static":
+            root: "web/pub/static"
+            allow: true
+            scripts: false
+            passthru: "/front-static.php"
+            rules:
+                ^/static/version\d+/(?<resource>.*)$:
+                    passthru: "/static/$resource"
 
 # The size of the persistent disk of the application (in MB).
 disk: 2048
