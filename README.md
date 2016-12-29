@@ -16,7 +16,7 @@ This set of code dynamically genreates the XML config and places it where it nee
 
 ## Setup
 
-This repo assumes that your Magento codebase is stored in the `web` directory of this repo, so if that's not ok with you you're going to have to reverse some of this code.  If, for example, you don't want to put your project into the `web` dir but the `public` dir, you'll need to change the `web.locations` block and sub "public" everywhere it currently says "web".
+This repo assumes that your Magento codebase is stored in the `web` directory of this repo, so if that's not ok with you you're going to have to reverse some of this code, namely the `web.locations` block in app.yaml and the file paths in `Platform.php`, pay attn to anything with the `Platformsh::webRoot` property in it, ie search the file for `$webRoot` and adjust the file paths accordingly.  
 
 I advise you to step through the `Platform.php` file to get a sense of what's what.
 
