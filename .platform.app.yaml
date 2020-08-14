@@ -6,7 +6,7 @@
 name: mymagento
 
 # The toolstack used to build the application.
-type: php:5.6
+type: php:7.2
 build:
     flavor: none
 
@@ -72,7 +72,6 @@ hooks:
     build: |
         set -e
         cd web
-        composer config http-basic.repo.magento.com $MAGENTO_USER $MAGENTO_PASS
         composer install --no-dev --prefer-dist --no-progress --no-interaction --optimize-autoloader
         cd ..
         php ./magento-build.php
