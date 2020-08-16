@@ -64,6 +64,8 @@ mounts:
     "/web/var": "shared:files/var"
     "/web/app/etc": "shared:files/etc"
     "/web/pub": "shared:files/pub"
+    "/web/generated": "shared:files/generated"
+    "/web/vendor": "shared:files/vendor"
 
 # The hooks executed at various points in the lifecycle of the application.
 hooks:

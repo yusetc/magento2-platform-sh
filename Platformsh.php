@@ -14,7 +14,9 @@ class Platformsh
     protected $platformReadWriteDirs = [
       "var", 
       "app/etc", 
-      "pub"
+      "pub",
+      "vendor",
+      "generated"
     ];
 
     protected $urls = ['unsecure' => [], 'secure' => []];
