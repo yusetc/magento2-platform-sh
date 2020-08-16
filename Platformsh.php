@@ -351,7 +351,7 @@ class Platformsh
         $this->log("Generating static content.");
 
         $this->execute(
-            "cd {$this->webRoot}/bin/; php ./magento setup:static-content:deploy"
+            "cd {$this->webRoot}/bin/; php ./magento setup:static-content:deploy -f"
         );
     }
 
