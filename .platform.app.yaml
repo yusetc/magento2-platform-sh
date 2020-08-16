@@ -80,13 +80,13 @@ hooks:
     deploy: |
         php ./magento-deploy.php
 # Default Magento 2 cron jobs
-crons:
-    cronrun:
-        spec: "*/1 * * * *"
-        cmd: "php web/bin/magento cron:run"
-    cron:
-        spec: "*/1 * * * *"
-        cmd: "php web/update/cron.php"
-    cronsetup:
-        spec: "*/1 * * * *"
-        cmd: "php web/bin/magento setup:cron:run"
+#crons:
+#    cronrun:
+#        spec: "*/1 * * * *"
+#        cmd: "php web/bin/magento cron:run"
+#    cron:
+#        spec: "*/1 * * * *"
+#        cmd: "php web/update/cron.php"
+#    cronsetup:
+#        spec: "*/1 * * * *"
+#        cmd: "php web/bin/magento setup:cron:run"

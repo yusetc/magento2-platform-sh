@@ -285,6 +285,8 @@ class Platformsh
     {
         $this->log("Updating secure and unsecure URLs.");
 
+        $password = '';
+
         if (strlen($this->dbPassword)) {
             $password = sprintf('-p%s', $this->dbPassword);
         }
