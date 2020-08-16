@@ -234,7 +234,7 @@ class Platformsh
 
         $this->updateDatabaseConfiguration();
 
-        $this->updateSolrConfiguration();
+//        $this->updateSolrConfiguration();
 
         $this->updateUrls();
 
